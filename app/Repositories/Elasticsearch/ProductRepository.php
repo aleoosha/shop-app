@@ -12,6 +12,21 @@ use stdClass;
 
 class ProductRepository implements ProductRepositoryContract
 {
+    public function autocomplete(string $query): \Illuminate\Support\Collection
+    {
+        return Product::searchQuery()
+            ->query([
+                'match_phrase_prefix' => [
+                    'title' => [
+                        'query' => $query
+                    ]
+                ]
+            ])
+            ->size(10)
+            ->execute()
+            ->models();
+    }
+
     public function search(ProductSearchDTO $data): LengthAwarePaginator
     {
         $builder = Product::searchQuery();
@@ -44,7 +59,7 @@ class ProductRepository implements ProductRepositoryContract
         if ($data->minPrice !== null || $data->maxPrice !== null) {
             $range = [];
             if ($data->minPrice !== null) $range['gte'] = $data->minPrice;
-            if ($data->maxPrice !== null) $range['lte'] = $maxPrice = $data->maxPrice;
+            if ($data->maxPrice !== null) $range['lte'] = $data->maxPrice;
 
             $filters[] = ['range' => ['price' => $range]];
         }
