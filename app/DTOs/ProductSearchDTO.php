@@ -12,25 +12,21 @@ readonly class ProductSearchDTO
         public ?string $query,
         public ?float $minPrice,
         public ?float $maxPrice,
-        public string $sortOrder = 'asc'
+        public string $sortField = 'price',
+        public string $sortOrder = 'asc',
+        public int $perPage = 15
     ) {}
 
-    /**
-     * Для использования в Контроллерах
-     */
     public static function fromRequest(Request $request): self
     {
         return new self(
             query: $request->validated('q'),
             minPrice: $request->validated('min_price') ? (float)$request->validated('min_price') : null,
             maxPrice: $request->validated('max_price') ? (float)$request->validated('max_price') : null,
-            sortOrder: $request->validated('sort', 'asc')
+            sortOrder: $request->validated('sort', 'asc') === 'desc' ? 'desc' : 'asc'
         );
     }
-
-    /**
-     * Для тестов, консоли и очередей
-     */
+    
     public static function fromArray(array $data): self
     {
         return new self(
@@ -41,3 +37,4 @@ readonly class ProductSearchDTO
         );
     }
 }
+

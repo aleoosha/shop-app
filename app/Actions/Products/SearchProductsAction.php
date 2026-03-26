@@ -6,6 +6,7 @@ namespace App\Actions\Products;
 
 use App\Contracts\Repositories\ProductRepositoryContract;
 use App\DTOs\ProductSearchDTO;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class SearchProductsAction
 {
@@ -13,11 +14,11 @@ class SearchProductsAction
         private ProductRepositoryContract $repository
     ) {}
 
-    public function handle(ProductSearchDTO $dto): \Illuminate\Pagination\LengthAwarePaginator
+    public function handle(ProductSearchDTO $dto): LengthAwarePaginator
     {
+        /** @var LengthAwarePaginator $results */
         $results = $this->repository->search($dto);
 
-        // Паттерн "Трансформация данных"
         $results->getCollection()->transform(function ($hit) {
             return new \App\ViewModels\Web\Products\ProductSearchViewModel($hit);
         });
