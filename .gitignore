@@ -1,24 +1,36 @@
-*.log
-.DS_Store
+# Игнорируем зависимости (их ставим через composer install)
+/vendor
+/node_modules
+
+# Игнорируем секреты (САМОЕ ВАЖНОЕ)
 .env
 .env.backup
 .env.production
-.phpactor.json
-.phpunit.result.cache
-/.fleet
-/.idea
-/.nova
-/.phpunit.cache
-/.vscode
-/.zed
-/auth.json
-/node_modules
+
+# Игнорируем системный мусор IDE
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+
+# Игнорируем временные файлы Laravel
+/storage/*.key
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+
+# Игнорируем сборку фронтенда
 /public/build
 /public/hot
 /public/storage
-/storage/*.key
-/storage/pail
-/vendor
-Homestead.json
-Homestead.yaml
-Thumbs.db
+
+# Игнорируем Docker/Sail специфику
+.phpunit.result.cache
+.docker/
