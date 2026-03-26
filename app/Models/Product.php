@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Elastic\ScoutDriverPlus\Searchable;
+use App\Casts\MoneyCast;
 
 class Product extends Model {
     use Searchable, HasFactory;
@@ -20,6 +21,13 @@ class Product extends Model {
             'price' => (float) $this->price,
             // Сюда же можно добавить категорию, если она есть
             // 'category' => $this->category?->name, 
+        ];
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'price' => MoneyCast::class,
         ];
     }
 }

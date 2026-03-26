@@ -23,6 +23,6 @@ readonly class ProductSearchViewModel
         $this->description = $hit->highlight()?->snippets('description')?->first() 
                          ?? $product->description;
 
-        $this->price = number_format((float) $product->price, 2, '.', ' ') . ' ₽';
+        $this->price = $product->price->formatted();
     }
 }
