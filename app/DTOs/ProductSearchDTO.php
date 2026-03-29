@@ -4,37 +4,41 @@ declare(strict_types=1);
 
 namespace App\DTOs;
 
-use Illuminate\Http\Request;
+use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Attributes\MapInputName;
+use Spatie\LaravelData\Attributes\Validation\Min;
+use Spatie\LaravelData\Attributes\Validation\Max;
+use Spatie\LaravelData\Attributes\Validation\Nullable;
+use Spatie\LaravelData\Attributes\Validation\StringType;
+use Spatie\LaravelData\Attributes\Validation\Numeric;
+use Spatie\LaravelData\Attributes\Validation\In;
+use Spatie\LaravelData\Attributes\MapName;
+use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
-readonly class ProductSearchDTO
+
+#[MapName(SnakeCaseMapper::class)]
+class ProductSearchDTO extends Data
 {
     public function __construct(
+        #[MapInputName('q'), Nullable, StringType]
         public ?string $query,
+
+        #[Numeric, Min(0), Nullable]
         public ?float $minPrice,
+
+        #[Numeric, Min(0), Nullable]
         public ?float $maxPrice,
+
+        #[Numeric, Min(1), Nullable]
+        public ?int $categoryId,
+
+        #[In(['price', 'title', 'created_at'])]
         public string $sortField = 'price',
+
+        #[In(['asc', 'desc'])]
         public string $sortOrder = 'asc',
+
+        #[Min(1), Max(100)]
         public int $perPage = 15
     ) {}
-
-    public static function fromRequest(Request $request): self
-    {
-        return new self(
-            query: $request->validated('q'),
-            minPrice: $request->validated('min_price') ? (float)$request->validated('min_price') : null,
-            maxPrice: $request->validated('max_price') ? (float)$request->validated('max_price') : null,
-            sortOrder: $request->validated('sort', 'asc') === 'desc' ? 'desc' : 'asc'
-        );
-    }
-    
-    public static function fromArray(array $data): self
-    {
-        return new self(
-            query: $data['q'] ?? null,
-            minPrice: isset($data['min_price']) ? (float)$data['min_price'] : null,
-            maxPrice: isset($data['max_price']) ? (float)$data['max_price'] : null,
-            sortOrder: $data['sort'] ?? 'asc'
-        );
-    }
 }
-

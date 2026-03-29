@@ -19,10 +19,13 @@ class ProductSearchRequest extends FormRequest
      */
     public function rules(): array
     {
+        
+
         return [
             'q' => ['nullable', 'string', 'max:255'],
             'min_price' => ['nullable', 'numeric', 'min:0'],
             'max_price' => ['nullable', 'numeric', 'min:0', 'gte:min_price'],
+            'category_id' => ['nullable', 'integer'], 
             'sort' => ['nullable', 'string', 'in:asc,desc'],
         ];
     }
