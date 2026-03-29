@@ -6,7 +6,7 @@ class ProductIndexConfig
 {
     public function getName(): string
     {
-        return 'products';
+        return config('scout.prefix') . 'products';
     }
 
     public function getConfig(): array

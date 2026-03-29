@@ -7,6 +7,7 @@ namespace App\Actions\Products;
 use App\Contracts\Repositories\ProductRepositoryContract;
 use App\DTOs\ProductSearchDTO;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\ViewModels\Web\Products\ProductSearchViewModel;
 
 class SearchProductsAction
 {
@@ -20,7 +21,7 @@ class SearchProductsAction
         $results = $this->repository->search($dto);
 
         $results->getCollection()->transform(function ($hit) {
-            return new \App\ViewModels\Web\Products\ProductSearchViewModel($hit);
+            return new ProductSearchViewModel($hit);
         });
 
         return $results->withQueryString();
