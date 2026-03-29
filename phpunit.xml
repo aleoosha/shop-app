@@ -32,5 +32,10 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <env name="SCOUT_PREFIX" value="test_"/>
+        <env name="ELASTIC_HOST" value="http://elasticsearch:9200"/>
+        <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="SCOUT_QUEUE" value="false"/>
+        <env name="SCOUT_DRIVER" value="elastic"/>
     </php>
 </phpunit>

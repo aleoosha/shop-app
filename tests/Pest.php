@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
 /*
 
 |--------------------------------------------------------------------------
@@ -13,7 +16,12 @@
 |
 */
 
-uses(Tests\TestCase::class)->in('Feature');
+uses(TestCase::class, RefreshDatabase::class)
+    ->beforeEach(function () {      
+        $this->setUpElasticsearch();
+    })
+    ->in('Feature');
+
 
 /*
 |--------------------------------------------------------------------------

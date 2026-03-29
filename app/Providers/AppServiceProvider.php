@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Contracts\ProductRepositoryInterface;
-use App\Repositories\ElasticProductRepository;
+use \App\Contracts\Repositories\ProductRepositoryContract;
+use \App\Repositories\Elasticsearch\ProductRepository;
+use Psr\Http\Client\ClientInterface;
+use GuzzleHttp\Client as GuzzleClient;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,10 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(
-            \App\Contracts\Repositories\ProductRepositoryContract::class,
-            \App\Repositories\Elasticsearch\ProductRepository::class
-        );
+        $this->app->bind(ClientInterface::class, GuzzleClient::class);
+        $this->app->bind(ProductRepositoryContract::class, ProductRepository::class);
     }
 
     /**
