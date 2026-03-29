@@ -12,6 +12,7 @@ readonly class ProductSearchViewModel
     public string $title;
     public string $description;
     public string $price;
+    public string $category_name;
 
     public function __construct(Hit $hit)
     {
@@ -24,5 +25,7 @@ readonly class ProductSearchViewModel
                          ?? $product->description;
 
         $this->price = $product->price->formatted();
+
+        $this->category_name = $product->category?->title ?? 'Без категории';
     }
 }
