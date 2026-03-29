@@ -8,48 +8,85 @@ use App\Contracts\Repositories\ProductRepositoryContract;
 use App\DTOs\ProductSearchDTO;
 use App\Models\Product;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use stdClass;
+use Elastic\ScoutDriverPlus\Support\Query;
 
 class ProductRepository implements ProductRepositoryContract
 {
-    public function autocomplete(string $query): \Illuminate\Support\Collection
-    {
-        return Product::searchQuery()
-            ->query([
-                'match_phrase_prefix' => [
-                    'title' => [
-                        'query' => $query
+public function autocomplete(string $query): \Illuminate\Support\Collection
+{
+    return Product::searchQuery()
+        ->query([
+            'bool' => [
+                'must' => [
+                    [
+                        'match_phrase_prefix' => [
+                            'title' => [
+                                'query' => $query,
+                            ]
+                        ]
+                    ]
+                ],
+                'should' => [
+                    [
+                        'prefix' => [
+                            'title' => [
+                                'value' => strtolower($query),
+                                'boost' => 20
+                            ]
+                        ]
                     ]
                 ]
-            ])
-            ->size(10)
-            ->execute()
-            ->models();
-    }
+            ]
+        ])
+        ->size(10)
+        ->execute()
+        ->models();
+}
 
     public function search(ProductSearchDTO $data): LengthAwarePaginator
     {
-        $builder = Product::searchQuery();
+        $boolQuery = Query::bool();
 
-        $must = $data->query 
-            ? ['multi_match' => ['query' => $data->query, 'fields' => ['title', 'description'], 'fuzziness' => 'AUTO']]
-            : ['match_all' => new stdClass()];
+        if ($data->query) {
+            $boolQuery->must(
+                Query::bool()
+                    ->should(
+                        Query::multiMatch()
+                            ->query($data->query)
+                            ->fields(['title^10', 'description'])
+                            ->operator('and')
+                    )
+                    ->should(
+                        Query::multiMatch()
+                            ->query($data->query)
+                            ->fields(['title^10', 'description'])
+                            ->fuzziness('AUTO')
+                    )
+                    ->minimumShouldMatch(1)
+            );
+        } else {
+            $boolQuery->must(Query::matchAll());
+        }
 
-        $filters = $this->buildFilters($data);
+        if ($data->categoryId !== null) {
+            $boolQuery->filter([
+                'term' => [
+                    'category_id' => (int) $data->categoryId
+                ]
+            ]);
+        }
 
-        return $builder->query([
-            'bool' => [
-                'must' => [$must],
-                'filter' => $filters,
-            ],
-        ])
-        ->highlight('description', [
-            'require_field_match' => false,
-            'pre_tags' => ['<em class="highlight">'],
-            'post_tags' => ['</em>'],
-        ])
-        ->sort($data->sortField, $data->sortOrder)
-        ->paginate($data->perPage);
+        if ($data->minPrice !== null || $data->maxPrice !== null) {
+            $range = [];
+            if ($data->minPrice !== null) $range['gte'] = $data->minPrice;
+            if ($data->maxPrice !== null) $range['lte'] = $data->maxPrice;
+            $boolQuery->filter(['range' => ['price' => $range]]);
+        }
+
+        return Product::searchQuery($boolQuery)
+            ->highlight('description')
+            ->sort($data->sortField, $data->sortOrder)
+            ->paginate($data->perPage);
     }
 
     private function buildFilters(ProductSearchDTO $data): array
@@ -62,6 +99,10 @@ class ProductRepository implements ProductRepositoryContract
             if ($data->maxPrice !== null) $range['lte'] = $data->maxPrice;
 
             $filters[] = ['range' => ['price' => $range]];
+        }
+
+        if ($data->categoryId !== null) {
+            $filters[] = ['term' => ['category_id' => $data->categoryId]];
         }
 
         return $filters;
