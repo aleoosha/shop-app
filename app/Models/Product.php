@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use \Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Infrastructure\Elasticsearch\Indices\ProductIndexConfig;
 use Elastic\ScoutDriverPlus\Searchable;
 use App\Casts\MoneyCast;
 
@@ -28,19 +30,29 @@ use App\Casts\MoneyCast;
  */
 class Product extends Model {
     use Searchable, HasFactory;
-    
+
     protected $fillable = ['title', 'price', 'description'];
+
+    public function getSearchableConfig(): array
+    {
+        return app(ProductIndexConfig::class)->getConfig();
+    }
 
     public function toSearchableArray(): array
     {
         return [
-            'id'    => (int) $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
-            'price' => (float) $this->price->amount,
-            // Сюда же можно добавить категорию, если она есть
-            // 'category' => $this->category?->name, 
+            'id'          => (int) $this->id,
+            'title'       => (string) $this->title,
+            'description' => (string) $this->description,
+            'price'       => (float) ($this->price->amount ?? 0),
+            'category_id' => (int) $this->category_id,
+            'category'    => (string) ($this->category?->title ?? 'Без категории'),
         ];
+    }
+
+    public function searchableAs(): string
+    {
+        return app(ProductIndexConfig::class)->getName();
     }
 
     protected function casts(): array
@@ -48,5 +60,10 @@ class Product extends Model {
         return [
             'price' => MoneyCast::class,
         ];
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 }
