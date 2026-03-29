@@ -53,13 +53,13 @@ public function autocomplete(string $query): \Illuminate\Support\Collection
                     ->should(
                         Query::multiMatch()
                             ->query($data->query)
-                            ->fields(['title^10', 'description'])
+                            ->fields(['title^50', 'description'])
                             ->operator('and')
                     )
                     ->should(
                         Query::multiMatch()
                             ->query($data->query)
-                            ->fields(['title^10', 'description'])
+                            ->fields(['title^50', 'description'])
                             ->fuzziness('AUTO')
                     )
                     ->minimumShouldMatch(1)
