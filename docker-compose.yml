@@ -68,6 +68,33 @@ services:
             timeout: 5s
         volumes:
             - 'sail-elasticsearch:/usr/share/elasticsearch/data'
+    
+    worker:
+        build:
+            context: ./vendor/laravel/sail/runtimes/8.3
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP:-1000}'
+        image: sail-8.3/app
+        environment:
+            WWWUSER: '${WWWUSER:-1000}'
+            LARAVEL_SAIL: 1
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail
+        depends_on:
+            - redis
+            - pgsql
+        command: php artisan queue:work --tries=3 --timeout=90
+
+    scheduler:
+        image: sail-8.3/app
+        command: php artisan schedule:work
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail
 
 networks:
     sail:
