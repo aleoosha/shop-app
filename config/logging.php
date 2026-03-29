@@ -126,7 +126,22 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+        
+        'actions' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/actions.log'),
+            'level' => 'info',
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
 
+        'elasticsearch' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/elastic.log'),
+            'level' => 'debug',
+            'days' => 7,
+            'replace_placeholders' => true,
+        ],
     ],
 
 ];
