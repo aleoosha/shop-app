@@ -33,7 +33,6 @@ test('it includes user id in action logs', function () {
         ->with(
             'Action: test_action',
             Mockery::on(function($context) use ($user) {
-                // Проверяем структуру данных
                 return $context['user_id'] === $user->id 
                     && isset($context['ip']) 
                     && is_array($context['data']);

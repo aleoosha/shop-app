@@ -52,7 +52,7 @@ class LogService implements LogServiceContract
                 continue;
             }
 
-            if (in_array(strtolower((string)$key), $this->sensitiveKeys)) {
+            if (is_scalar($key) && in_array(strtolower((string)$key), $this->sensitiveKeys)) {
                 $data[$key] = '********';
             }
         }

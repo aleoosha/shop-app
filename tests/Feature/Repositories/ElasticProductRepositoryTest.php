@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Repositories;
 
 use App\Repositories\Elasticsearch\ProductRepository;
-use App\DTOs\ProductSearchDTO;
+use App\DTOs\Search\ProductSearchDTO;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 test('repository returns paginator on search', function () {
