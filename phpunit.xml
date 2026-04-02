@@ -37,5 +37,7 @@
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SCOUT_QUEUE" value="false"/>
         <env name="SCOUT_DRIVER" value="elastic"/>
+        <env name="ELASTIC_SCOUT_DRIVER_REFRESH_DOCUMENTS" value="true"/>
+        <env name="CACHE_STORE" value="redis"/>
     </php>
 </phpunit>

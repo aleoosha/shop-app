@@ -3,8 +3,16 @@
 use App\Models\Category;
 use App\Actions\Categories\GetCategoryTreeAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
+use Tests\Traits\InteractsWithElasticsearch;
 
-uses(RefreshDatabase::class);
+/** @var \Tests\TestCase|\Tests\Traits\InteractsWithElasticsearch $this */
+
+uses(RefreshDatabase::class, InteractsWithElasticsearch::class);
+
+beforeEach(function () {
+    $this->setUpElasticsearch();
+});
 
 test('it returns categories with correct depth from action', function () {
     Cache::tags(['categories'])->flush();
@@ -21,7 +29,8 @@ test('it returns categories with correct depth from action', function () {
     $categories = app(GetCategoryTreeAction::class)->handle();
 
     $parentFromAction = $categories->firstWhere('title', 'Электроника');
-    $childFromAction = $categories->firstWhere('title', 'Смартфоны');
+    
+    $childFromAction = $parentFromAction->children->firstWhere('title', 'Смартфоны');
 
     expect($parentFromAction->depth)->toBe(0)
         ->and($childFromAction->depth)->toBe(1);

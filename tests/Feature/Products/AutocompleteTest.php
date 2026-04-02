@@ -5,18 +5,22 @@ declare(strict_types=1);
 use App\Models\Product;
 use function Pest\Laravel\getJson;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Traits\InteractsWithElasticsearch;
 
-uses(RefreshDatabase::class);
+/** @var \Tests\TestCase|\Tests\Traits\InteractsWithElasticsearch $this */
 
+
+uses(RefreshDatabase::class, InteractsWithElasticsearch::class);
+
+beforeEach(function () {
+    $this->setUpElasticsearch();
+});
 
 test('it returns suggestions for autocomplete', function () {
     Product::factory()->create(['title' => 'iPhone 15 Pro']);
     Product::factory()->create(['title' => 'iPad Air']);
     Product::factory()->create(['title' => 'Samsung Galaxy']);
-
-    Product::all()->each->searchable();
     
-    /** @var \Tests\TestCase $this */
     $this->refreshIndex();
 
     $response = getJson('/api/products/autocomplete?q=iph');
