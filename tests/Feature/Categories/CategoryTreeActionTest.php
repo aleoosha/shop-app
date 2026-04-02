@@ -7,6 +7,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 test('it returns categories with correct depth from action', function () {
+    Cache::tags(['categories'])->flush();
+
     $parent = Category::factory()->create(['title' => 'Электроника']);
     
     Category::factory()->create([

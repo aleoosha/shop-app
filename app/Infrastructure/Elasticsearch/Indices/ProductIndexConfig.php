@@ -34,19 +34,24 @@ class ProductIndexConfig
             ],
             'mappings' => [
                 'properties' => [
+                    'created_at' => [
+                        'type' => 'date',
+                        'format' => 'yyyy-MM-dd HH:mm:ss||strict_date_optional_time||epoch_millis'
+                    ],
                     'category_id' => [
                         'type' => 'integer',
                     ],
                     'price' => [
-                        'type' => 'float',
+                        'type' => 'integer',
                     ],
                     'title' => [
                         'type' => 'text',
                         'analyzer' => 'autocomplete',
                         'search_analyzer' => 'standard',
                         'fields' => [
-                            'keyword' => ['type' => 'keyword', 'ignore_above' => 256]
-                        ]
+                            'raw' => ['type' => 'text', 'analyzer' => 'standard'],
+                            'keyword' => ['type' => 'keyword', 'ignore_above' => 256],
+                        ],
                     ],
                     'description' => [
                         'type' => 'text',
