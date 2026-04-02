@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Database\Eloquent\Relations\BelongsTo;
+use \Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Infrastructure\Elasticsearch\Indices\ProductIndexConfig;
 use Elastic\ScoutDriverPlus\Searchable;
 use App\Casts\MoneyCast;
@@ -40,13 +41,16 @@ class Product extends Model {
 
     public function toSearchableArray(): array
     {
+        $this->loadMissing('category');
+
         return [
             'id'          => (int) $this->id,
             'title'       => (string) $this->title,
             'description' => (string) $this->description,
-            'price'       => (float) ($this->price->amount ?? 0),
+            'price'       => (int) ($this->price->amount ?? 0),
             'category_id' => (int) $this->category_id,
             'category'    => (string) ($this->category?->title ?? 'Без категории'),
+            'created_at'  => $this->created_at?->format('Y-m-d H:i:s'),
         ];
     }
 
@@ -65,5 +69,10 @@ class Product extends Model {
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function cartItems(): HasMany
+    {
+        return $this->hasMany(CartItem::class);
     }
 }

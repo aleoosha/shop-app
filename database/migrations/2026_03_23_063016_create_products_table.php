@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('title'); // Заголовок
-            $table->decimal('price', 10, 2); // Цена (до 99 999 999.99)
-            $table->text('description')->nullable(); // Описание (может быть пустым)
+            $table->string('title');
+            $table->integer('price');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
