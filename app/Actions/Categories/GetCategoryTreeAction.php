@@ -10,8 +10,8 @@ class GetCategoryTreeAction
 {
     public function handle(): Collection
     {
-        return Cache::remember('categories_tree', 3600, function () {
-            return Category::withDepth()->get();
+        return Cache::tags(['categories'])->remember('categories_tree', 86400, function () {
+            return Category::withDepth()->get()->toTree(); 
         });
     }
 }

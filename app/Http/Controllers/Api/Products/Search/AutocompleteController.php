@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Products;
+namespace App\Http\Controllers\Api\Products\Search;
 
 use App\Http\Controllers\Controller;
 use App\Actions\Products\GetAutocompleteSuggestionsAction;
