@@ -20,24 +20,26 @@ class MoneyCast implements CastsAttributes
             return null;
         }
 
-        return new Money((float) $value);
+        return new Money((int) $value);
     }
 
     /**
      * Преобразует объект Money обратно В число для записи в базу.
      */
-    public function set(Model $model, string $key, mixed $value, array $attributes): ?float
+    public function set(Model $model, string $key, mixed $value, array $attributes): ?int
     {
-        if (is_null($value)) {
-            return null;
-        }    
+        if (is_null($value)) return null;
 
         if ($value instanceof Money) {
             return $value->amount;
         }
 
+        if (is_int($value)) {
+            return $value;
+        }
+
         if (is_numeric($value)) {
-            return (float) $value;
+            return (int) round((float) $value * 100);
         }
 
         throw new InvalidArgumentException('Цена должна быть числом или объектом Money.');

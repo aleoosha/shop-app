@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DTOs;
+namespace App\DTOs\Search;
 
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Attributes\MapInputName;
@@ -41,4 +41,12 @@ class ProductSearchDTO extends Data
         #[Min(1), Max(100)]
         public int $perPage = 15
     ) {}
+
+    public function getElasticSortField(): string
+    {
+        return match($this->sortField) {
+            'title' => 'title.keyword',
+            default => $this->sortField,
+        };
+    }
 }
