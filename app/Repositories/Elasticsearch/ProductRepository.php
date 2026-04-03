@@ -11,113 +11,100 @@ use App\ValueObjects\Money;
 use Elastic\ScoutDriverPlus\Support\Query;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use \Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class ProductRepository implements ProductRepositoryContract
 {
+    public function search(ProductSearchDTO $data): LengthAwarePaginator
+    {
+        $boolQuery = Query::bool();
+
+        $this->applyFullTextSearch($boolQuery, $data->query);
+        $this->applyCategoryFilter($boolQuery, $data->categoryId);
+        $this->applyPriceFilter($boolQuery, $data->minPrice, $data->maxPrice);
+
+        $results = Product::searchQuery($boolQuery)
+            ->searchType('dfs_query_then_fetch')
+            ->highlight('description')
+            ->sort($data->getElasticSortField(), $data->sortOrder)
+            ->paginate($data->perPage);
+
+        $this->loadRelations($results);
+
+        return $results;
+    }
+
     /**
-     * Быстрый поиск для выпадающего списка (автокомплит).
+     * Полнотекстовый поиск с весами.
      */
+    private function applyFullTextSearch($boolQuery, ?string $queryString): void
+    {
+        if (!$queryString) {
+            $boolQuery->must(Query::matchAll());
+            return;
+        }
+
+        $boolQuery->must(
+            Query::multiMatch()
+                ->query($queryString)
+                ->fields(['title.raw^10', 'title^5', 'description'])
+                ->analyzer('standard')
+                ->type('best_fields')
+                ->tieBreaker(0.0)
+        );
+    }
+
+    /**
+     * Фильтрация по категории.
+     */
+    private function applyCategoryFilter($boolQuery, ?int $categoryId): void
+    {
+        if ($categoryId) {
+            $boolQuery->filter(['term' => ['category_id' => $categoryId]]);
+        }
+    }
+
+    /**
+     * Фильтрация по диапазону цен.
+     */
+    private function applyPriceFilter($boolQuery, ?float $min, ?float $max): void
+    {
+        if (!$min && !$max) return;
+
+        $range = [];
+        if ($min) $range['gte'] = Money::fromDecimal($min)->amount;
+        if ($max) $range['lte'] = Money::fromDecimal($max)->amount;
+
+        $boolQuery->filter(['range' => ['price' => $range]]);
+    }
+
+    /**
+     * Жадная загрузка связей (Eager Loading).
+     */
+    private function loadRelations(LengthAwarePaginator $results): void
+    {
+        $hits = $results->getCollection();
+        
+        if ($hits->isEmpty()) return;
+
+        $models = $hits->map(fn($hit) => $hit->model())->filter();
+
+        if ($models->isNotEmpty()) {
+            (new EloquentCollection($models))->load(['category']);
+        }
+    }
+
     public function autocomplete(string $query): Collection
     {
         return Product::searchQuery()
             ->query([
                 'bool' => [
-                    'must' => [
-                        [
-                            'match' => [
-                                'title' => [
-                                    'query' => $query,
-                                    'analyzer' => 'standard'
-                                ]
-                            ]
-                        ]
-                    ],
-                    'should' => [
-                        [
-                            'prefix' => [
-                                'title' => [
-                                    'value' => strtolower($query),
-                                    'boost' => 20
-                                ]
-                            ]
-                        ]
-                    ]
+                    'must' => [['match' => ['title' => ['query' => $query, 'analyzer' => 'standard']]]],
+                    'should' => [['prefix' => ['title' => ['value' => strtolower($query), 'boost' => 20]]]]
                 ]
             ])
             ->size(10)
             ->execute()
             ->models();
-    }
-
-    /**
-     * Основной полнотекстовый поиск с фильтрами.
-     */
-    public function search(ProductSearchDTO $data): LengthAwarePaginator
-    {
-        $boolQuery = Query::bool();
-
-        if ($data->query) {
-            $boolQuery->must(
-                Query::multiMatch()
-                    ->query($data->query)
-                    ->fields([
-                        'title.raw^10', 
-                        'title^5', 
-                        'description'
-                    ])
-                    ->analyzer('standard')
-                    ->type('best_fields')
-                    ->tieBreaker(0.0)
-            );
-        } else {
-            $boolQuery->must(Query::matchAll());
-        }
-
-        if ($data->categoryId !== null) {
-            $boolQuery->filter([
-                'term' => [
-                    'category_id' => (int) $data->categoryId
-                ]
-            ]);
-        }
-
-        if ($data->minPrice !== null || $data->maxPrice !== null) {
-            $range = [];
-
-            if ($data->minPrice !== null) {
-                $range['gte'] = Money::fromDecimal((float) $data->minPrice)->amount;
-            }
-            
-            if ($data->maxPrice !== null) {
-                $range['lte'] = Money::fromDecimal((float) $data->maxPrice)->amount;
-            }
-            
-            $boolQuery->filter(['range' => ['price' => $range]]);
-        }
-
-        $results = Product::searchQuery($boolQuery)
-            ->searchType('dfs_query_then_fetch')
-            ->highlight('description')
-            ->sort(
-                $data->sortField === 'title' ? 'title.keyword' : $data->sortField, 
-                $data->sortOrder
-            )
-            ->paginate($data->perPage);
-
-
-        $hits = $results->getCollection();
-
-        if ($hits->isNotEmpty()) {
-            $models = new EloquentCollection(
-                $hits->map(fn($hit) => $hit->model())
-            );
-
-            if ($models->isNotEmpty()) {
-                (new EloquentCollection($models))->load(['category']);
-            }
-        }
-
-        return $results;
     }
 }
