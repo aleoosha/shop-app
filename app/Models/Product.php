@@ -2,21 +2,27 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
+use App\Casts\ProductSpecsCast;
+use App\Infrastructure\Elasticsearch\Indices\ProductIndexConfig;
+use App\ValueObjects\Money;
+use App\ValueObjects\ProductSpecs;
+use Elastic\ScoutDriverPlus\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use \Illuminate\Database\Eloquent\Relations\BelongsTo;
-use \Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Infrastructure\Elasticsearch\Indices\ProductIndexConfig;
-use Elastic\ScoutDriverPlus\Searchable;
-use App\Casts\MoneyCast;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
  * @property string $title
  * @property string $description
- * @property \App\ValueObjects\Money $price
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Money $price
+ * @property ProductSpecs $specs
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ *
  * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newQuery()
@@ -27,12 +33,20 @@ use App\Casts\MoneyCast;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
-class Product extends Model {
-    use Searchable, HasFactory;
+class Product extends Model
+{
+    use HasFactory, Searchable;
 
-    protected $fillable = ['title', 'price', 'description'];
+    protected $fillable = [
+        'title',
+        'description',
+        'price',
+        'category_id',
+        'specs',
+    ];
 
     public function getSearchableConfig(): array
     {
@@ -44,13 +58,17 @@ class Product extends Model {
         $this->loadMissing('category');
 
         return [
-            'id'          => (int) $this->id,
-            'title'       => (string) $this->title,
+            'id' => (int) $this->id,
+            'title' => (string) $this->title,
             'description' => (string) $this->description,
-            'price'       => (int) ($this->price->amount ?? 0),
+            'price' => (int) ($this->price->amount ?? 0),
             'category_id' => (int) $this->category_id,
-            'category'    => (string) ($this->category?->title ?? 'Без категории'),
-            'created_at'  => $this->created_at?->format('Y-m-d H:i:s'),
+            'category' => (string) ($this->category?->title ?? 'Без категории'),
+            'brand' => $this->specs?->brand,
+            'color' => $this->specs?->color,
+            'country' => $this->specs?->country,
+            'condition' => $this->specs?->condition,
+            'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
         ];
     }
 
@@ -63,6 +81,7 @@ class Product extends Model {
     {
         return [
             'price' => MoneyCast::class,
+            'specs' => ProductSpecsCast::class,
         ];
     }
 

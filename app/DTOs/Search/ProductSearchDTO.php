@@ -21,25 +21,34 @@ class ProductSearchDTO extends Data
 {
     public function __construct(
         #[MapInputName('q'), Nullable, StringType]
-        public ?string $query,
+        public readonly ?string $query,
 
         #[Numeric, Min(0), Nullable]
-        public ?float $minPrice,
+        public readonly ?float $minPrice,
 
         #[Numeric, Min(0), Nullable]
-        public ?float $maxPrice,
+        public readonly ?float $maxPrice,
 
         #[Numeric, Min(1), Nullable]
-        public ?int $categoryId,
+        public readonly ?int $categoryId,
+
+        #[Nullable, StringType]
+        public readonly ?string $brand,
+
+        #[Nullable, StringType]
+        public readonly ?string $color,
+
+        #[Nullable, StringType]
+        public readonly ?string $condition,
 
         #[In(['price', 'title', 'created_at'])]
-        public string $sortField = 'price',
+        public readonly string $sortField = 'price',
 
         #[In(['asc', 'desc'])]
-        public string $sortOrder = 'asc',
+        public readonly string $sortOrder = 'asc',
 
         #[Min(1), Max(100)]
-        public int $perPage = 15
+        public readonly int $perPage = 15
     ) {}
 
     public function getElasticSortField(): string

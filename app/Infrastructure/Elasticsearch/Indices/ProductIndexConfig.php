@@ -62,6 +62,10 @@ class ProductIndexConfig
                             'keyword' => ['type' => 'keyword']
                         ]
                     ],
+                    'brand'     => ['type' => 'keyword'],
+                    'color'     => ['type' => 'keyword'],
+                    'country'   => ['type' => 'keyword'],
+                    'condition' => ['type' => 'keyword'],
                 ],
             ],
         ];
