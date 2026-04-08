@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -10,17 +11,29 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ProductFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Product::class;
+
     public function definition(): array
     {
+        $brands = ['Apple', 'Samsung', 'Xiaomi', 'Sony', 'Huawei', 'Google'];
+        $colors = ['Black', 'White', 'Space Gray', 'Midnight', 'Blue', 'Red'];
+        $conditions = ['new', 'used', 'refurbished'];
+        $countries = ['China', 'USA', 'Vietnam', 'Korea', 'Germany'];
+
         return [
-            'title' => fake()->words(3, true),
-            'price' => fake()->numberBetween(1000, 500000), 
-            'description' => fake()->realText(200),
+            'title' => $this->faker->sentence(3),
+            'description' => $this->faker->paragraphs(2, true),
+            'price' => $this->faker->numberBetween(10000, 200000), 
+            'category_id' => Category::query()->inRandomOrder()->first()?->id ?? Category::factory(),
+            
+            'specs' => [
+                'brand' => $this->faker->randomElement($brands),
+                'color' => $this->faker->randomElement($colors),
+                'condition' => $this->faker->randomElement($conditions),
+                'country' => $this->faker->randomElement($countries),
+                'weight' => $this->faker->numberBetween(150, 500) . 'g',
+            ],
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

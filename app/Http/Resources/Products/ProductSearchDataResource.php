@@ -14,13 +14,23 @@ class ProductSearchDataResource extends JsonResource
         return [
             'id' => $product->id,
             'title' => $product->title,
-            'description' => $product->description,
+            'description' => $this->when($request->routeIs('products.show'), $product->description),
             'price' => [
-                'amount'    => $product->price->amount,
-                'decimal'   => $product->price->toFloat(),
+                'decimal' => $product->price->toFloat(),
                 'formatted' => $product->price->formatted(),
+                'currency' => $product->price->currency,
             ],
-            'category' => $product->category?->title,
+            'category' => [
+                'id' => $product->category_id,
+                'title' => $product->category?->title,
+            ],
+            'specs' => [
+                'brand' => $product->brand,
+                'color' => $product->color,
+                'condition' => $product->condition,
+                'country' => $product->country,
+            ],
+            'created_at' => $product->created_at?->toDateTimeString(),
         ];
     }
 }

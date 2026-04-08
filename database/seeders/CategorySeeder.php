@@ -13,12 +13,10 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Очистка (Senior-way для Postgres)
         Product::query()->update(['category_id' => null]);
         DB::table('categories')->delete();
         DB::statement("SELECT setval(pg_get_serial_sequence('categories', 'id'), 1, false)");
 
-        // 2. Вставляем данные напрямую в БД через Query Builder (минуя модель)
         $now = now();
 
         $electronicsId = DB::table('categories')->insertGetId([
@@ -67,10 +65,8 @@ class CategorySeeder extends Seeder
             ],
         ]);
 
-        // 3. ТЕПЕРЬ запускаем модель, чтобы она проставила _lft и _rgt на готовые данные
         Category::fixTree();
 
-        // 4. Привязываем товары (теперь их 1000)
         $leafIds = Category::whereIsLeaf()->pluck('id');
         $products = Product::all();
 
