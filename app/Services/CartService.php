@@ -31,8 +31,9 @@ class CartService
 
         if ($this->auth->check()) {
             $this->currentCart = Cart::firstOrCreate([
-                'user_id' => $this->auth->id()
+                'user_id' => $this->auth->id(),
             ]);
+
             return $this->currentCart;
         }
 
@@ -40,12 +41,13 @@ class CartService
 
         if ($guestId) {
             $this->currentCart = Cart::firstOrCreate([
-                'guest_id' => $guestId
+                'guest_id' => $guestId,
             ]);
+
             return $this->currentCart;
         }
 
-        return new Cart();
+        return new Cart;
     }
 
     /**
@@ -55,7 +57,7 @@ class CartService
     {
         $cart = $this->getOrCreateCart();
 
-        if (!$cart->exists) {
+        if (! $cart->exists) {
             return 0;
         }
 
@@ -69,7 +71,7 @@ class CartService
     {
         $cart = $this->getOrCreateCart();
 
-        if (!$cart->exists) {
+        if (! $cart->exists) {
             return 0;
         }
 
@@ -86,7 +88,7 @@ class CartService
         $guestCart = Cart::where('guest_id', $guestId)->first();
         $userCart = Cart::firstOrCreate(['user_id' => $userId]);
 
-        if (!$guestCart || $guestCart->id === $userCart->id) {
+        if (! $guestCart || $guestCart->id === $userCart->id) {
             return;
         }
 

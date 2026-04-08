@@ -13,9 +13,9 @@ use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 class CartItemDTO extends Data
 {
     public function __construct(
-        public int $productId,
+        public readonly int $productId,
 
         #[Min(1)]
-        public int $quantity = 1,
+        public readonly int $quantity = 1,
     ) {}
 }
