@@ -2,17 +2,19 @@
 
 namespace App\Providers;
 
-use \Illuminate\Contracts\Auth\Guard;
-use \Illuminate\Http\Request;
+use App\Contracts\Services\LogServiceContract;
+use App\Jobs\Handlers\RegisteredHandler;
+use App\Listeners\Cart\MergeCartAfterLogin;
+use App\Services\CartService;
+use App\Services\LogService;
+use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Psr\Http\Client\ClientInterface;
-use GuzzleHttp\Client as GuzzleClient;
-use App\Contracts\Services\LogServiceContract;
-use App\Services\LogService;
-use App\Services\CartService;
-use App\Listeners\Cart\MergeCartAfterLogin;
-use Illuminate\Auth\Events\Login;
-use Illuminate\Support\Facades\Event;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,8 +29,11 @@ class AppServiceProvider extends ServiceProvider
             return new CartService(
                 $app->make(Guard::class),
                 $app->make(Request::class)
-        );
-    });
+            );
+        });
+        $this->app->singleton('outbox.map', fn () => [
+            Registered::class => RegisteredHandler::class,
+        ]);
     }
 
     /**
@@ -38,6 +43,11 @@ class AppServiceProvider extends ServiceProvider
     {
         Event::listen(
             Login::class,
+            MergeCartAfterLogin::class
+        );
+
+        Event::listen(
+            Registered::class,
             MergeCartAfterLogin::class
         );
     }
