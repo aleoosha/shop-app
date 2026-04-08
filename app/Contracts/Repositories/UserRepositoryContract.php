@@ -6,7 +6,9 @@ namespace App\Contracts\Repositories;
 
 use App\Models\User;
 
-interface UserRepositoryContract {
+interface UserRepositoryContract
+{
     public function findByEmail(string $email): ?User;
+
     public function create(array $data): User;
 }

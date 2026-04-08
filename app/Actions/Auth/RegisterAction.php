@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Actions\Auth;
 
-use App\DTOs\Auth\RegisterDTO;
 use App\DTOs\Auth\AuthResponseDTO;
+use App\DTOs\Auth\RegisterDTO;
 use App\DTOs\Auth\UserDTO;
+use App\Jobs\ProcessOutboxEvent;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +17,7 @@ class RegisterAction
 {
     public function execute(RegisterDTO $data): AuthResponseDTO
     {
-        return DB::transaction(function () use ($data) {
+        $response = DB::transaction(function () use ($data) {
             $user = User::create([
                 'name' => $data->name,
                 'email' => $data->email,
@@ -39,5 +40,9 @@ class RegisterAction
                 accessToken: $token
             );
         });
+
+        ProcessOutboxEvent::dispatch();
+
+        return $response;
     }
 }

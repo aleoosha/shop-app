@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Contracts\Repositories;
+namespace App\Repositories\Eloquent;
 
 use App\Models\User;
+use App\Contracts\Repositories\UserRepositoryContract;
 
 class UserRepository implements UserRepositoryContract
 {

@@ -94,11 +94,18 @@ services:
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP:-1000}'
-        command: php artisan schedule:work
+        image: sail-8.3/app
+        environment:
+            WWWUSER: '${WWWUSER:-1000}'
+            LARAVEL_SAIL: 1
         volumes:
             - '.:/var/www/html'
         networks:
             - sail
+        depends_on:
+            - redis
+            - pgsql
+        command: php artisan schedule:work
 
 networks:
     sail:
