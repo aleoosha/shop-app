@@ -8,16 +8,16 @@
 - [x] Elastic Infra: Команда `app:elastic-setup` и кастомные маппинги.
 - [x] Тестирование: Unit и Feature тесты для поиска и денежной логики.
 
-## 🚀 Milestone 2: Корзина и Highload-авторизация (In Progress)
+## 🚀 Milestone 2: Корзина и Highload-авторизация (Done)
 - [x] Базовая корзина: Модели, миграции и логика `CartService`.
 - [x] Слияние корзин: Логика миграции гостевой корзины к пользователю при Login/Register.
 - [x] JSON Resources: Перевод всех ответов (Поиск, Категории, Корзина) на API-стандарт.
-- [ ] **Transactional Outbox:**
+- [x] **Transactional Outbox:**
     - [x] Миграция таблицы `outbox_events` (с полями для ретраев и ошибок).
     - [x] Контракт и хендлеры: `OutboxHandlerContract` и `RegisteredHandler`.
     - [x] Реестр событий: Настройка `outbox.map` в `AppServiceProvider`.
     - [x] Фоновый воркер: `ProcessOutboxEvent` с атомарными блокировками (`lockForUpdate`).
-- [ ] **Auth API:**
+- [x] **Auth API:**
     - [x] `RegisterAction` и `LoginAction` с использованием `DB::transaction`.
     - [x] Глобальная обработка `UniqueConstraintViolationException` в `bootstrap/app.php`.
 - [x] **Idempotency:** Реализовать Middleware для обработки заголовка `X-Idempotency-Key`.

@@ -8,7 +8,6 @@ use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Attributes\Validation\Email;
 use Spatie\LaravelData\Attributes\Validation\Min;
 use Spatie\LaravelData\Attributes\Validation\Confirmed;
-use Spatie\LaravelData\Attributes\Validation\Unique;
 use Spatie\LaravelData\Attributes\Validation\StringType;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
@@ -20,7 +19,7 @@ class RegisterDTO extends Data
         #[StringType, Min(2)]
         public readonly string $name,
 
-        #[Email, Unique('users', 'email')]
+        #[Email, StringType]
         public readonly string $email,
 
         #[StringType, Min(8), Confirmed]

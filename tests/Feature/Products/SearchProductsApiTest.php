@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\Products;
 
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Traits\InteractsWithElasticsearch;
 
 uses(RefreshDatabase::class, InteractsWithElasticsearch::class);
 
-beforeEach(fn() => $this->setUpElasticsearch());
+beforeEach(fn () => $this->setUpElasticsearch());
 
 test('it returns products via search api with correct structure', function () {
     $category = Category::factory()->create(['title' => 'Phones']);
     Product::factory()->create([
         'title' => 'iPhone 15 Pro',
         'price' => 100000,
-        'category_id' => $category->id
+        'category_id' => $category->id,
     ]);
 
     $this->refreshIndex();
@@ -29,12 +29,28 @@ test('it returns products via search api with correct structure', function () {
         ->assertJsonStructure([
             'data' => [
                 '*' => [
-                    'id', 
-                    'title', 
-                    'price' => ['amount', 'decimal', 'formatted'],
-                    'category'
-                ]
-            ]
+                    'id',
+                    'title',
+                    'price' => [
+                        'decimal',
+                        'formatted',
+                        'currency',
+                    ],
+                    'category' => [
+                        'id',
+                        'title',
+                    ],
+                    'specs' => [
+                        'brand',
+                        'color',
+                        'condition',
+                        'country',
+                    ],
+                    'created_at',
+                ],
+            ],
+            'meta', // если используешь пагинацию
+            'links',
         ])
         ->assertJsonPath('data.0.price.decimal', 1000)
         ->assertJsonPath('data.0.price.formatted', '1 000.00 ₽');

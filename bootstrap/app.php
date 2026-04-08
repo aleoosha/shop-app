@@ -15,8 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->alias([
-            'idempotency' => IdempotencyMiddleware::class,
+        $middleware->api(prepend: [
+            IdempotencyMiddleware::class,
         ]);
         $middleware->append(AssignGuestCartToken::class);
         $middleware->encryptCookies(except: [
