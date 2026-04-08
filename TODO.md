@@ -13,14 +13,14 @@
 - [x] Слияние корзин: Логика миграции гостевой корзины к пользователю при Login/Register.
 - [x] JSON Resources: Перевод всех ответов (Поиск, Категории, Корзина) на API-стандарт.
 - [ ] **Transactional Outbox:**
-    - [ ] Миграция таблицы `outbox_events` (с полями для ретраев и ошибок).
-    - [ ] Контракт и хендлеры: `OutboxHandlerContract` и `RegisteredHandler`.
-    - [ ] Реестр событий: Настройка `outbox.map` в `AppServiceProvider`.
-    - [ ] Фоновый воркер: `ProcessOutboxEvent` с атомарными блокировками (`lockForUpdate`).
+    - [x] Миграция таблицы `outbox_events` (с полями для ретраев и ошибок).
+    - [x] Контракт и хендлеры: `OutboxHandlerContract` и `RegisteredHandler`.
+    - [x] Реестр событий: Настройка `outbox.map` в `AppServiceProvider`.
+    - [x] Фоновый воркер: `ProcessOutboxEvent` с атомарными блокировками (`lockForUpdate`).
 - [ ] **Auth API:**
-    - [ ] `RegisterAction` и `LoginAction` с использованием `DB::transaction`.
-    - [ ] Глобальная обработка `UniqueConstraintViolationException` в `bootstrap/app.php`.
-- [ ] **Idempotency:** Реализовать Middleware для обработки заголовка `X-Idempotency-Key`.
+    - [x] `RegisterAction` и `LoginAction` с использованием `DB::transaction`.
+    - [x] Глобальная обработка `UniqueConstraintViolationException` в `bootstrap/app.php`.
+- [x] **Idempotency:** Реализовать Middleware для обработки заголовка `X-Idempotency-Key`.
 
 ## 🏗 Milestone 3: Заказы и Оформление (Next Step)
 - [ ] **Checkout Logic:**

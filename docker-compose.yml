@@ -86,10 +86,14 @@ services:
         depends_on:
             - redis
             - pgsql
-        command: php artisan queue:work --tries=3 --timeout=90
+        command: php artisan queue:work --queue=high,default,low,scout --tries=3 --timeout=90
 
     scheduler:
-        image: sail-8.3/app
+        build:
+            context: ./vendor/laravel/sail/runtimes/8.3
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP:-1000}'
         command: php artisan schedule:work
         volumes:
             - '.:/var/www/html'

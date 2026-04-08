@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('products', function(Blueprint $table){
+        Schema::table('products', function (Blueprint $table) {
             $table->jsonb('specs')->default('{}');
         });
-
-        DB::statement('CREATE INDEX products_specs_gin ON products USING GIN (specs jsonb_path_ops)');
+        
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('CREATE INDEX products_specs_gin ON products USING GIN (specs jsonb_path_ops)');
+        }
     }
 
     /**
@@ -26,7 +28,7 @@ return new class extends Migration
         Schema::table('products', function (Blueprint $table) {
             $table->dropColumn('specs');
         });
-        
+
         DB::statement('DROP INDEX IF EXISTS products_specs_gin');
     }
 };
