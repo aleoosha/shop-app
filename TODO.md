@@ -30,11 +30,12 @@
 - [ ] **Admin Panel:** Установка Filament для управления товарами и просмотра заказов.
 
 ## 🛠 Оптимизация и надежность (Backlog)
-- [ ] **Horizon:** Тонкая настройка очередей (`high`, `default`, `low`, `scout`) в `config/horizon.php`.
-- [ ] **Outbox CLI:** Команда `outbox:retry` для восстановления бракованных задач.
+- [x] **Horizon:** Тонкая настройка очередей (`high`, `default`, `low`, `scout`) в `config/horizon.php`.
+- [x] **Outbox CLI:** Команда `outbox:retry` для восстановления бракованных задач.
 - [ ] **Elasticsearch Suggesters:** Добавление автоисправления опечаток в поисковую строку.
 - [ ] **API Documentation:** Генерация Swagger/OpenAPI спецификации.
 - [ ] **Frontend:** Инициализация Vue 3 + Pinia для интеграции с текущим API.
+- [ ] **ID и UUID:** Внедрить связку ID (внутренний) + UUID (публичный) для моделей Order, User и Product.
 
 ---
-*Последнее обновление: 2026-04-08*
+*Последнее обновление: 2026-04-09*
