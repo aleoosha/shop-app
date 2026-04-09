@@ -14,16 +14,20 @@ class MoneyCast implements CastsAttributes
     /**
      * Преобразует значение ИЗ базы (число) В объект Money.
      */
-    public function get(Model $model, string $key, mixed $value, array $attributes): ?Money
+    public function get(Model $model, string $key, mixed $value, array $attributes): Money
     {
-        return new Money((int) $value);
+        return new Money($value);
     }
 
     /**
      * Преобразует объект Money обратно В число для записи в базу.
      */
-    public function set(Model $model, string $key, mixed $value, array $attributes): ?int
+    public function set(Model $model, string $key, mixed $value, array $attributes): int
     {
+        if (is_null($value)) {
+            return 0;
+        }
+
         if ($value instanceof Money) {
             return $value->amount;
         }
