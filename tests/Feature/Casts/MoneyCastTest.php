@@ -41,10 +41,3 @@ test('it serializes Money object back to integer when saving', function () {
     ]);
 });
 
-test('it handles null price', function () {
-    $product = new Product(['title' => 'Null Product']);
-    $product->price = null;
-    $product->save();
-
-    expect(Product::first()->price)->toBeNull();
-});

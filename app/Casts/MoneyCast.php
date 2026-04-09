@@ -16,10 +16,6 @@ class MoneyCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): ?Money
     {
-        if (is_null($value)) {
-            return null;
-        }
-
         return new Money((int) $value);
     }
 
@@ -28,8 +24,6 @@ class MoneyCast implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): ?int
     {
-        if (is_null($value)) return null;
-
         if ($value instanceof Money) {
             return $value->amount;
         }

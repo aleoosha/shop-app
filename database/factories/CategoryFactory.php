@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
@@ -19,7 +20,7 @@ class CategoryFactory extends Factory
         $title = $this->faker->unique()->word();
         return [
             'title' => ucfirst($title),
-            'slug'  => \Illuminate\Support\Str::slug($title),
+            'slug'  => Str::slug($title),
         ];
     }
 }

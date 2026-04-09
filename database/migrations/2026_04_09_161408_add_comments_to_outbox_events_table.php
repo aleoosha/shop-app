@@ -26,6 +26,7 @@ return new class extends Migration
                 ->change();
 
             $table->integer('attempts')
+                ->default(0)
                 ->comment('Количество предпринятых попыток обработки события воркером')
                 ->change();
 

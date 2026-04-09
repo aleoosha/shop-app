@@ -21,8 +21,8 @@ return new class extends Migration
 
             // Поля паттерна Nested Set
             $table->unsignedBigInteger('parent_id')->nullable()->comment('ID родительской категории')->change();
-            $table->unsignedInteger('_lft')->comment('Левый индекс в иерархии дерева (Nested Set)')->change();
-            $table->unsignedInteger('_rgt')->comment('Правый индекс в иерархии дерева (Nested Set)')->change();
+            $table->unsignedInteger('_lft')->nullable()->comment('Левый индекс в иерархии дерева (Nested Set)')->change();
+            $table->unsignedInteger('_rgt')->nullable()->comment('Правый индекс в иерархии дерева (Nested Set)')->change();
         });
 
         if (DB::getDriverName() === 'pgsql') {
