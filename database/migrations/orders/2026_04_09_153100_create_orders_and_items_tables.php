@@ -15,11 +15,15 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id()->comment('Внутренний инкрементный идентификатор');
             $table->uuid('uuid')->unique()->comment('Публичный уникальный идентификатор для API и URL');
-            
+
             $table->foreignId('user_id')
                 ->constrained()
                 ->cascadeOnDelete()
                 ->comment('Привязка к пользователю, совершившему заказ');
+
+            $table->string('delivery_address')->comment('Адрес доставки на момент заказа');
+            $table->string('phone')->comment('Контактный телефон для связи по заказу');
+            $table->text('note')->nullable()->comment('Комментарий пользователя к заказу');
 
             $table->integer('total_price')
                 ->comment('Итоговая сумма заказа в минимальных денежных единицах (копейках)');
@@ -29,14 +33,14 @@ return new class extends Migration
                 ->comment('Текущий статус жизненного цикла заказа (pending, processing, etc.)');
 
             $table->timestamps();
-            
+
             $table->comment('Таблица основных данных заказа');
         });
 
         // Таблица состава заказа (Snapshots)
         Schema::create('order_items', function (Blueprint $table) {
             $table->id()->comment('Внутренний идентификатор строки состава');
-            
+
             $table->foreignId('order_id')
                 ->constrained()
                 ->cascadeOnDelete()

@@ -51,7 +51,7 @@ class CartService
     }
 
     /**
-     * Общее количество товаров в корзине (сумма всех quantity).
+     * Общее количество товаров (через коллекцию в памяти).
      */
     public function getCartCount(): int
     {
@@ -61,11 +61,11 @@ class CartService
             return 0;
         }
 
-        return (int) $cart->items()->sum('quantity');
+        return (int) $cart->items->sum('quantity');
     }
 
     /**
-     * Общая стоимость корзины (сумма quantity * price_at_addition).
+     * Общая стоимость (через коллекцию в памяти).
      */
     public function getCartTotal(): int
     {
@@ -75,9 +75,9 @@ class CartService
             return 0;
         }
 
-        return (int) $cart->items()
-            ->selectRaw('SUM(quantity * price_at_addition) as total')
-            ->value('total') ?? 0;
+        return (int) $cart->items->sum(function ($item) {
+            return $item->quantity * $item->price_at_addition->amount;
+        });
     }
 
     /**
@@ -107,5 +107,20 @@ class CartService
         $guestCart->delete();
 
         $this->currentCart = null;
+    }
+
+    /**
+     * Полная очистка и удаление текущей корзины из БД и памяти.
+     */
+    public function clearCurrentCart(): void
+    {
+        $cart = $this->getOrCreateCart();
+
+        if ($cart->exists) {
+            $cart->items()->delete();
+            $cart->delete();
+
+            $this->currentCart = null;
+        }
     }
 }

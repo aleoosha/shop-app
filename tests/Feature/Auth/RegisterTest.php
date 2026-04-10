@@ -50,8 +50,47 @@ it('prevents double registration with the same idempotency key', function () {
     
     $response = $this->postJson('/api/register', $payload, $headers);
 
-    $response->assertStatus(200)
+    $response->assertStatus(201)
         ->assertHeader('X-Idempotency-Cache', 'HIT');
 
     expect(User::whereEmail('duplicate@example.com')->count())->toBe(1);
+});
+
+it('prevents registration with existing email', function () {
+    User::factory()->create(['email' => 'john@example.com']);
+
+    $payload = [
+        'name' => 'John Doe',
+        'email' => 'john@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ];
+
+    $response = $this->postJson('/api/register', $payload);
+    $response->assertStatus(422);
+});
+
+it('can register a new user and receives a token', function () {
+    $payload = [
+        'name' => 'John Doe',
+        'email' => 'john@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ];
+
+    $response = $this->postJson('/api/register', $payload);
+
+    $response->assertStatus(201)
+        ->assertJsonStructure([
+            'data' => [
+                'user' => ['id', 'name', 'email'],
+                'accessToken',
+            ],
+        ]);
+
+    $this->assertDatabaseHas('users', ['email' => 'john@example.com']);
+
+    $this->assertDatabaseHas('outbox_events', [
+        'event_type' => Registered::class,
+    ]);
 });

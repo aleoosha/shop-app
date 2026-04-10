@@ -4,40 +4,36 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use App\Casts\MoneyCast;
 use App\Enums\OrderStatus;
+use App\ValueObjects\Money;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
  * @property string $uuid
  * @property int $user_id
- * @property \App\ValueObjects\Money $total_price
+ * @property Money $total_price
  * @property OrderStatus $status
  */
 class Order extends Model
 {
+    use HasFactory, SoftDeletes, HasUuid;
+
     protected $fillable = [
         'uuid',
         'user_id',
+        'delivery_address',
+        'phone',
+        'note',
         'total_price',
         'status',
     ];
-
-    /**
-     * Автоматическая генерация UUID при создании заказа.
-     */
-    protected static function boot(): void
-    {
-        parent::boot();
-        
-        static::creating(function (Order $order) {
-            $order->uuid = (string) Str::uuid();
-        });
-    }
 
     /**
      * Типизация полей.

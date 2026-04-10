@@ -10,6 +10,7 @@ Schedule::command('telescope:prune')->daily()
 Schedule::command('model:prune')->daily()
     ->appendOutputTo(storage_path('logs/scheduler.log'));
 Schedule::job(new ProcessOutboxEvent)->everyMinute();
+Schedule::command('app:cleanup-old-carts')->dailyAt('03:00');
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());

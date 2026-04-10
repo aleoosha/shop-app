@@ -17,6 +17,6 @@ class CartController extends Controller
     {
         $result = $action->execute($data);
 
-        return $this->success($result, 'Product added to cart', 201);
+        return $this->success($result, 'Товар добавлен в корзину', 201);
     }
 }

@@ -13,6 +13,8 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         Product::query()->update(['category_id' => null]);
+        
+        Category::truncate();
 
         Category::rebuildTree([
             [
