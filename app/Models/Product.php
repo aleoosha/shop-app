@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use App\Casts\MoneyCast;
 use App\Casts\ProductSpecsCast;
 use App\Infrastructure\Elasticsearch\Indices\ProductIndexConfig;
@@ -12,8 +13,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -39,12 +40,14 @@ use Illuminate\Support\Str;
  */
 class Product extends Model
 {
-    use HasFactory, Searchable;
+    use HasFactory, Searchable, SoftDeletes, HasUuid;
 
     protected $fillable = [
+        'uuid',
         'title',
         'description',
         'price',
+        'stock',
         'category_id',
         'specs',
     ];
@@ -94,11 +97,5 @@ class Product extends Model
     public function cartItems(): HasMany
     {
         return $this->hasMany(CartItem::class);
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(fn ($model) => $model->uuid = (string) Str::uuid());
     }
 }

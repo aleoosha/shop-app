@@ -4,8 +4,8 @@ namespace App\Services;
 
 use App\Contracts\Services\LogServiceContract;
 use App\Enums\LogChannel;
-use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\Request;
 use Illuminate\Log\LogManager;
 use Throwable;
 
@@ -49,14 +49,21 @@ class LogService implements LogServiceContract
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 $data[$key] = $this->maskSensitiveData($value);
+
                 continue;
             }
 
-            if (is_scalar($key) && in_array(strtolower((string)$key), $this->sensitiveKeys)) {
+            if (is_scalar($key) && in_array(strtolower((string) $key), $this->sensitiveKeys)) {
                 $data[$key] = '********';
             }
         }
 
         return $data;
+    }
+    
+    public function warning(string $message, array $context = [], LogChannel $channel = LogChannel::STACK): void
+    {
+        $this->logManager->channel($channel->value)
+            ->warning($message, $this->maskSensitiveData($context));
     }
 }

@@ -126,7 +126,7 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
-        
+
         'actions' => [
             'driver' => 'daily',
             'path' => storage_path('logs/actions.log'),
@@ -140,6 +140,30 @@ return [
             'path' => storage_path('logs/elastic.log'),
             'level' => 'debug',
             'days' => 7,
+            'replace_placeholders' => true,
+        ],
+        
+        'system' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/system.log'),
+            'level' => 'debug',
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
+        'stores' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/stores.log'),
+            'level' => 'info',
+            'days' => 30,
+            'replace_placeholders' => true,
+        ],
+
+        'payments' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/payments.log'),
+            'level' => 'info',
+            'days' => 60,
             'replace_placeholders' => true,
         ],
     ],

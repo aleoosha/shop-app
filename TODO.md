@@ -2,41 +2,33 @@
 
 ## ✅ Milestone 1: Базовая инфраструктура и Поиск (Done)
 - [x] Настройка окружения: Docker (Sail), PostgreSQL, Redis, Elasticsearch.
-- [x] Инфраструктура логов: `LogService` с маскированием данных и каналами.
+- [x] Инфраструктура логов: `LogService` с маскированием и уровнями (info/warning/error).
 - [x] Value Objects: Реализация `Money` и `ProductSpecs`.
 - [x] Репозиторий: Полнотекстовый поиск с весами релевантности и фильтрами.
 - [x] Elastic Infra: Команда `app:elastic-setup` и кастомные маппинги.
-- [x] Тестирование: Unit и Feature тесты для поиска и денежной логики.
 
-## 🚀 Milestone 2: Корзина и Highload-авторизация (Done)
+## ✅ Milestone 2: Корзина и Highload-авторизация (Done)
 - [x] Базовая корзина: Модели, миграции и логика `CartService`.
-- [x] Слияние корзин: Логика миграции гостевой корзины к пользователю при Login/Register.
-- [x] JSON Resources: Перевод всех ответов (Поиск, Категории, Корзина) на API-стандарт.
-- [x] **Transactional Outbox:**
-    - [x] Миграция таблицы `outbox_events` (с полями для ретраев и ошибок).
-    - [x] Контракт и хендлеры: `OutboxHandlerContract` и `RegisteredHandler`.
-    - [x] Реестр событий: Настройка `outbox.map` в `AppServiceProvider`.
-    - [x] Фоновый воркер: `ProcessOutboxEvent` с атомарными блокировками (`lockForUpdate`).
-- [x] **Auth API:**
-    - [x] `RegisterAction` и `LoginAction` с использованием `DB::transaction`.
-    - [x] Глобальная обработка `UniqueConstraintViolationException` в `bootstrap/app.php`.
-- [x] **Idempotency:** Реализовать Middleware для обработки заголовка `X-Idempotency-Key`.
+- [x] Слияние корзин: Логика миграции гостевой корзины при Login/Register.
+- [x] **Transactional Outbox:** Таблица событий, хендлеры, воркер с `lockForUpdate`.
+- [x] **Auth API:** Register/Login Actions с атомарными блокировками в Redis.
+- [x] **Idempotency:** Middleware для `X-Idempotency-Key` с сохранением HTTP-статусов.
 
-## 🏗 Milestone 3: Заказы и Оформление (Next Step)
-- [ ] **Checkout Logic:**
-    - [ ] Модели `Order` и `OrderItem`.
-    - [ ] `CheckoutAction`: атомарная конвертация корзины в заказ с сохранением цен (`price_at_addition`).
-- [ ] **Inventory Management:** Простая логика списания остатков со склада при оформлении.
-- [ ] **Admin Panel:** Установка Filament для управления товарами и просмотра заказов.
+## ✅ Milestone 3: Заказы и Оформление (Done)
+- [x] **Database Architecture:**
+    - [x] Организация миграций по папкам и типизация через `strict_types`.
+    - [x] Внедрение `HasUuid` через трейт и `initializeHasUuid`.
+    - [x] Добавление комментариев к полям и таблицам во всей БД.
+    - [x] Реализация **Soft Deletes** и фоновая команда `app:cleanup-old-carts`.
+- [x] **Inventory Management:** Атомарное списание остатков `stock` через `lockForUpdate` в БД.
+- [x] **Checkout Logic:** `CheckoutAction` со снапшотами цен и очисткой корзины.
+- [x] **Order API:** Контроллеры, DTO и Resources для оформления и просмотра истории.
 
-## 🛠 Оптимизация и надежность (Backlog)
-- [x] **Horizon:** Тонкая настройка очередей (`high`, `default`, `low`, `scout`) в `config/horizon.php`.
-- [x] **Outbox CLI:** Команда `outbox:retry` для восстановления бракованных задач.
-- [ ] **Elasticsearch Suggesters:** Добавление автоисправления опечаток в поисковую строку.
+## 🏗 Milestone 4: Администрирование и UI (Next Step)
+- [ ] **Filament Admin Panel:** Установка и настройка ресурсов для заказов и товаров.
+- [ ] **Elasticsearch Suggesters:** Добавление автодополнения в поисковую строку.
 - [ ] **API Documentation:** Генерация Swagger/OpenAPI спецификации.
-- [ ] **Frontend:** Инициализация Vue 3 + Pinia для интеграции с текущим API.
-- [x] **ID и UUID:** Внедрить связку ID (внутренний) + UUID (публичный) для моделей Order, User и 
-- [x] **DB comments:** Добавить комментарии к полям и таблицам в БД.
+- [ ] **Frontend Starter:** Инициализация Vue 3 + Pinia для интеграции.
 
 ---
 *Последнее обновление: 2026-04-10*

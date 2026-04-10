@@ -27,10 +27,12 @@ class IdempotencyMiddleware
 
         $cacheKey = "idempotency_key:{$key}";
 
-        if ($cachedResponse = Cache::get($cacheKey)) {
+        if ($cachedData = Cache::get($cacheKey)) {
+            $data = json_decode($cachedData, true);
+
             return response()->json(
-                json_decode($cachedResponse, true),
-                Response::HTTP_OK
+                $data['content'],
+                $data['status']
             )->header('X-Idempotency-Cache', 'HIT');
         }
 
@@ -43,11 +45,14 @@ class IdempotencyMiddleware
         }
 
         try {
-            /** @var Response $response */
+            /** @var \Illuminate\Http\Response $response */
             $response = $next($request);
 
             if ($response->isSuccessful()) {
-                Cache::put($cacheKey, $response->getContent(), self::CACHE_TTL);
+                Cache::put($cacheKey, json_encode([
+                    'content' => json_decode($response->getContent(), true),
+                    'status'  => $response->getStatusCode(),
+                ]), self::CACHE_TTL);
             }
 
             return $response->header('X-Idempotency-Cache', 'MISS');
