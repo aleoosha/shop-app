@@ -18,7 +18,8 @@
         "laravel/scout": "^10.0",
         "laravel/tinker": "^2.9",
         "php-http/guzzle7-adapter": "*",
-        "spatie/laravel-data": "^4.20"
+        "spatie/laravel-data": "^4.20",
+        "aleoosha/hive-mind-laravel": "dev-main"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.7",
@@ -46,6 +47,12 @@
             "Tests\\": "tests/"
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/aleoosha/hive-mind-laravel"
+        }
+    ],
     "scripts": {
         "setup": [
             "composer install",

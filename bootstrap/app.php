@@ -1,5 +1,6 @@
 <?php
 
+use Aleoosha\HiveMind\Http\Middleware\AltruismMiddleware;
 use App\Http\Middleware\AssignGuestCartToken;
 use App\Http\Middleware\IdempotencyMiddleware;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -15,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->append(AltruismMiddleware::class);
         $middleware->api(prepend: [
             IdempotencyMiddleware::class,
         ]);
