@@ -108,6 +108,28 @@ services:
             - pgsql
         command: php artisan schedule:work
 
+    hive-pulse:
+        build:
+            context: ./vendor/laravel/sail/runtimes/8.3
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP:-1000}'
+        image: sail-8.3/app
+        environment:
+            WWWUSER: '${WWWUSER:-1000}'
+            LARAVEL_SAIL: 1
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail
+        depends_on:
+            redis:
+                condition: service_healthy
+            pgsql:
+                condition: service_started
+        command: php artisan hive:pulse
+        restart: unless-stopped
+
 networks:
     sail:
         driver: bridge

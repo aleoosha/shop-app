@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/aleoosha/hive-mind-laravel.git",
-                "reference": "6f48395c0eeff463c1bd242a82136d4e4fe4bd1b"
+                "reference": "ca8a66a210b4378a705aa43f6165face21bff297"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aleoosha/hive-mind-laravel/zipball/6f48395c0eeff463c1bd242a82136d4e4fe4bd1b",
-                "reference": "6f48395c0eeff463c1bd242a82136d4e4fe4bd1b",
+                "url": "https://api.github.com/repos/aleoosha/hive-mind-laravel/zipball/ca8a66a210b4378a705aa43f6165face21bff297",
+                "reference": "ca8a66a210b4378a705aa43f6165face21bff297",
                 "shasum": ""
             },
             "require": {
@@ -68,7 +68,7 @@
                 "source": "https://github.com/aleoosha/hive-mind-laravel/tree/main",
                 "issues": "https://github.com/aleoosha/hive-mind-laravel/issues"
             },
-            "time": "2026-04-16T07:31:11+00:00"
+            "time": "2026-04-18T06:47:30+00:00"
         },
         {
             "name": "babenkoivan/elastic-adapter",
