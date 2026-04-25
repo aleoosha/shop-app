@@ -3,7 +3,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.3",
@@ -51,6 +54,26 @@
         {
             "type": "vcs",
             "url": "https://github.com/aleoosha/hive-mind-laravel"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/aleoosha/support-types"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/aleoosha/tau-pid-contracts"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/aleoosha/telemetry-contracts"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/aleoosha/tau-pid-kernel"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/aleoosha/dss-core"
         }
     ],
     "scripts": {
@@ -94,6 +117,9 @@
     },
     "extra": {
         "laravel": {
+            "providers": [
+                "Aleoosha\\HiveMind\\Providers\\HiveMindServiceProvider"
+            ],
             "dont-discover": []
         }
     },

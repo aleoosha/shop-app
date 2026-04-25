@@ -4,28 +4,75 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "018fe60f7bc47e6020d9505449c3f9ff",
+    "content-hash": "7fd43e6d39f17582a5d51ac91fa8f8a0",
     "packages": [
+        {
+            "name": "aleoosha/dss-core",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aleoosha/dss-core.git",
+                "reference": "201e3a22c6c3f255b3ab3bafe6b05e463497f65d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aleoosha/dss-core/zipball/201e3a22c6c3f255b3ab3bafe6b05e463497f65d",
+                "reference": "201e3a22c6c3f255b3ab3bafe6b05e463497f65d",
+                "shasum": ""
+            },
+            "require": {
+                "aleoosha/support-types": "dev-main",
+                "aleoosha/tau-pid-contracts": "dev-main",
+                "aleoosha/telemetry-contracts": "dev-main",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.6",
+                "pestphp/pest": "^2.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aleoosha\\DssCore\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Decision Support System core for system resilience management",
+            "support": {
+                "source": "https://github.com/aleoosha/dss-core/tree/main",
+                "issues": "https://github.com/aleoosha/dss-core/issues"
+            },
+            "time": "2026-04-25T11:04:01+00:00"
+        },
         {
             "name": "aleoosha/hive-mind-laravel",
             "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aleoosha/hive-mind-laravel.git",
-                "reference": "ca8a66a210b4378a705aa43f6165face21bff297"
+                "reference": "a24d5170cdd055e6cae4a6f9307416f8485a06e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aleoosha/hive-mind-laravel/zipball/ca8a66a210b4378a705aa43f6165face21bff297",
-                "reference": "ca8a66a210b4378a705aa43f6165face21bff297",
+                "url": "https://api.github.com/repos/aleoosha/hive-mind-laravel/zipball/a24d5170cdd055e6cae4a6f9307416f8485a06e0",
+                "reference": "a24d5170cdd055e6cae4a6f9307416f8485a06e0",
                 "shasum": ""
             },
             "require": {
+                "aleoosha/dss-core": "dev-main",
+                "aleoosha/support-types": "dev-main",
+                "aleoosha/tau-pid-contracts": "dev-main",
+                "aleoosha/tau-pid-kernel": "dev-main",
+                "aleoosha/telemetry-contracts": "dev-main",
                 "illuminate/support": "^10.0|^11.0",
                 "php": "^8.1",
                 "rybakit/msgpack": "^0.9.2"
             },
             "require-dev": {
+                "laravel/pint": "^1.29",
                 "orchestra/testbench": "^9.0",
                 "pestphp/pest": "^3.0",
                 "pestphp/pest-plugin-laravel": "^3.0",
@@ -68,7 +115,171 @@
                 "source": "https://github.com/aleoosha/hive-mind-laravel/tree/main",
                 "issues": "https://github.com/aleoosha/hive-mind-laravel/issues"
             },
-            "time": "2026-04-18T06:47:30+00:00"
+            "time": "2026-04-25T11:35:08+00:00"
+        },
+        {
+            "name": "aleoosha/support-types",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aleoosha/support-types.git",
+                "reference": "211c0af981f4e35da5dbe0b7f024703e52988c45"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aleoosha/support-types/zipball/211c0af981f4e35da5dbe0b7f024703e52988c45",
+                "reference": "211c0af981f4e35da5dbe0b7f024703e52988c45",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "pestphp/pest": "^2.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aleoosha\\Support\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Aleoosha\\Support\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aleoosha",
+                    "email": "emoladushki@gmail.com"
+                }
+            ],
+            "description": "Fundamental types and value objects for Aleoosha ecosystem, including FixedPoint math.",
+            "support": {
+                "source": "https://github.com/aleoosha/support-types/tree/main",
+                "issues": "https://github.com/aleoosha/support-types/issues"
+            },
+            "time": "2026-04-25T10:32:42+00:00"
+        },
+        {
+            "name": "aleoosha/tau-pid-contracts",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aleoosha/tau-pid-contracts.git",
+                "reference": "74fad23bcfe4eab6309b047544fbcb5ae3d8237f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aleoosha/tau-pid-contracts/zipball/74fad23bcfe4eab6309b047544fbcb5ae3d8237f",
+                "reference": "74fad23bcfe4eab6309b047544fbcb5ae3d8237f",
+                "shasum": ""
+            },
+            "require": {
+                "aleoosha/support-types": "dev-main",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "pestphp/pest": "^2.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aleoosha\\TauPid\\Contracts\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Contracts and DTOs for PID control systems",
+            "support": {
+                "source": "https://github.com/aleoosha/tau-pid-contracts/tree/main",
+                "issues": "https://github.com/aleoosha/tau-pid-contracts/issues"
+            },
+            "time": "2026-04-25T11:08:29+00:00"
+        },
+        {
+            "name": "aleoosha/tau-pid-kernel",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aleoosha/tau-pid-kernel.git",
+                "reference": "8af6411743c505eeb048fb44ee29f4522320ad20"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aleoosha/tau-pid-kernel/zipball/8af6411743c505eeb048fb44ee29f4522320ad20",
+                "reference": "8af6411743c505eeb048fb44ee29f4522320ad20",
+                "shasum": ""
+            },
+            "require": {
+                "aleoosha/support-types": "dev-main",
+                "aleoosha/tau-pid-contracts": "dev-main",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.6",
+                "pestphp/pest": "^2.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aleoosha\\TauPid\\Kernel\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Fixed-point PID calculation and adaptive tuning kernel",
+            "support": {
+                "source": "https://github.com/aleoosha/tau-pid-kernel/tree/main",
+                "issues": "https://github.com/aleoosha/tau-pid-kernel/issues"
+            },
+            "time": "2026-04-25T10:06:39+00:00"
+        },
+        {
+            "name": "aleoosha/telemetry-contracts",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aleoosha/telemetry-contracts.git",
+                "reference": "2a0942f5547ddf87061c94f749be506203fc948b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aleoosha/telemetry-contracts/zipball/2a0942f5547ddf87061c94f749be506203fc948b",
+                "reference": "2a0942f5547ddf87061c94f749be506203fc948b",
+                "shasum": ""
+            },
+            "require": {
+                "aleoosha/support-types": "dev-main",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "pestphp/pest": "^2.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aleoosha\\Telemetry\\Contracts\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Contracts and DTOs for system telemetry and state management",
+            "support": {
+                "source": "https://github.com/aleoosha/telemetry-contracts/tree/main",
+                "issues": "https://github.com/aleoosha/telemetry-contracts/issues"
+            },
+            "time": "2026-04-25T08:05:57+00:00"
         },
         {
             "name": "babenkoivan/elastic-adapter",
